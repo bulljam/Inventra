@@ -1,6 +1,7 @@
 import '../config/env.js';
 import connectDatabase from '../config/database.js';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Product from '../models/Product.js';
 import Supplier from '../models/Supplier.js';
@@ -14,18 +15,33 @@ const getDateFromToday = (daysOffset = 0) => {
   return date;
 };
 
+const dropAllCollections = async () => {
+  const db = mongoose.connection.db;
+  const collections = await db.listCollections().toArray();
+
+  if (collections.length === 0) {
+    console.log('No existing collections found. Starting from an empty database.');
+    return;
+  }
+
+  console.log(`Dropping ${collections.length} existing collection(s)...`);
+
+  for (const collection of collections) {
+    await db.collection(collection.name).drop();
+    console.log(`Dropped collection: ${collection.name}`);
+  }
+};
+
 const seedData = async () => {
   try {
-    
-    await connectDatabase();
+    console.log('Full database seed');
+    console.log('==================');
 
-    
-    await User.deleteMany({});
-    await Product.deleteMany({});
-    await Supplier.deleteMany({});
-    await Purchase.deleteMany({});
-    await Sale.deleteMany({});
-    console.log('Cleared existing data');
+    await connectDatabase();
+    console.log('Connected to MongoDB');
+
+    await dropAllCollections();
+    console.log('Database reset complete');
 
     const users = [
       {
@@ -148,7 +164,7 @@ const seedData = async () => {
         productSku: 'WH-001',
         supplier: createdSuppliers[0]._id,
         supplierName: 'TechCorp Solutions',
-        quantity: 50,
+        quantity: 30,
         unitPrice: 75.99,
         purchaseDate: getDateFromToday(0),
         createdBy: 'admin@example.com'
@@ -159,7 +175,7 @@ const seedData = async () => {
         productSku: 'CT-002',
         supplier: createdSuppliers[1]._id,
         supplierName: 'FashionHub Inc',
-        quantity: 100,
+        quantity: 60,
         unitPrice: 15.99,
         purchaseDate: getDateFromToday(1),
         createdBy: 'admin@example.com'
@@ -170,7 +186,7 @@ const seedData = async () => {
         productSku: 'PG-003',
         supplier: createdSuppliers[2]._id,
         supplierName: 'BookWorld Publishing',
-        quantity: 30,
+        quantity: 15,
         unitPrice: 35.99,
         purchaseDate: getDateFromToday(2),
         createdBy: 'john@example.com'
@@ -181,7 +197,7 @@ const seedData = async () => {
         productSku: 'GT-004',
         supplier: createdSuppliers[3]._id,
         supplierName: 'GreenThumb Gardens',
-        quantity: 25,
+        quantity: 12,
         unitPrice: 120.99,
         purchaseDate: getDateFromToday(3),
         createdBy: 'jane@example.com'
@@ -192,7 +208,7 @@ const seedData = async () => {
         productSku: 'WH-001',
         supplier: createdSuppliers[0]._id,
         supplierName: 'TechCorp Solutions',
-        quantity: 20,
+        quantity: 10,
         unitPrice: 73.99,
         purchaseDate: getDateFromToday(5),
         createdBy: 'admin@example.com'
@@ -207,7 +223,7 @@ const seedData = async () => {
         productId: createdProducts[0]._id,
         productName: 'Wireless Headphones',
         productSku: 'WH-001',
-        quantity: 2,
+        quantity: 14,
         salePrice: 99.99,
         customer: 'John Smith',
         saleDate: getDateFromToday(1),
@@ -217,7 +233,7 @@ const seedData = async () => {
         productId: createdProducts[1]._id,
         productName: 'Cotton T-Shirt',
         productSku: 'CT-002',
-        quantity: 5,
+        quantity: 24,
         salePrice: 24.99,
         customer: 'Sarah Johnson',
         saleDate: getDateFromToday(2),
@@ -227,7 +243,7 @@ const seedData = async () => {
         productId: createdProducts[0]._id,
         productName: 'Wireless Headphones',
         productSku: 'WH-001',
-        quantity: 1,
+        quantity: 9,
         salePrice: 99.99,
         customer: 'Mike Davis',
         saleDate: getDateFromToday(3),
@@ -237,7 +253,7 @@ const seedData = async () => {
         productId: createdProducts[3]._id,
         productName: 'Garden Tools Set',
         productSku: 'GT-004',
-        quantity: 1,
+        quantity: 9,
         salePrice: 159.99,
         customer: 'Lisa Wilson',
         saleDate: getDateFromToday(4),
@@ -247,7 +263,7 @@ const seedData = async () => {
         productId: createdProducts[1]._id,
         productName: 'Cotton T-Shirt',
         productSku: 'CT-002',
-        quantity: 3,
+        quantity: 18,
         salePrice: 24.99,
         customer: 'Emma Brown',
         saleDate: getDateFromToday(5),
@@ -257,7 +273,7 @@ const seedData = async () => {
         productId: createdProducts[2]._id,
         productName: 'Programming Guide',
         productSku: 'PG-003',
-        quantity: 2,
+        quantity: 14,
         salePrice: 49.99,
         customer: 'David Lee',
         saleDate: getDateFromToday(6),
@@ -267,7 +283,7 @@ const seedData = async () => {
         productId: createdProducts[0]._id,
         productName: 'Wireless Headphones',
         productSku: 'WH-001',
-        quantity: 1,
+        quantity: 13,
         salePrice: 99.99,
         customer: '',
         saleDate: getDateFromToday(7),
@@ -278,15 +294,31 @@ const seedData = async () => {
     await Sale.insertMany(sales);
     console.log('Sales seeded');
 
+    const totalPurchasesAmount = purchases.reduce(
+      (sum, purchase) => sum + (purchase.quantity * purchase.unitPrice),
+      0
+    );
+    const totalSalesAmount = sales.reduce(
+      (sum, sale) => sum + (sale.quantity * sale.salePrice),
+      0
+    );
+    const totalRevenue = totalSalesAmount - totalPurchasesAmount;
+
     console.log('Database seeded successfully!');
+    console.log(`Seeded purchases total: $${totalPurchasesAmount.toFixed(2)}`);
+    console.log(`Seeded sales total: $${totalSalesAmount.toFixed(2)}`);
+    console.log(`Seeded revenue total: $${totalRevenue.toFixed(2)}`);
     console.log('\n📋 Default login credentials:');
     console.log('Admin: admin@example.com / password123');
     console.log('Super Admin: superadmin@example.com / password123');
-
-    process.exit(0);
   } catch (error) {
     console.error('Error seeding database:', error);
-    process.exit(1);
+    process.exitCode = 1;
+  } finally {
+    if (mongoose.connection.readyState === 1) {
+      await mongoose.connection.close();
+      console.log('Database connection closed');
+    }
   }
 };
 

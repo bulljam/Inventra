@@ -164,20 +164,10 @@ VITE_NODE_ENV=development
 
 ### Initialize Database with Sample Data
 
-1. **Create admin users**:
+1. **Reset and seed the full database**:
    ```bash
    cd backend
-   pnpm run auth-seed
-   ```
-
-2. **Seed the database with sample data**:
-   ```bash
    pnpm run seed
-   ```
-
-3. **Fresh database reset** (removes all data):
-   ```bash
-   pnpm run fresh
    ```
 
 ### Default Login Credentials
@@ -191,9 +181,7 @@ After running the seed scripts, use these credentials to login:
 ### Backend Scripts
 - `pnpm start` - Start production server
 - `pnpm run dev` - Start development server with nodemon
-- `pnpm run seed` - Populate database with sample data
-- `pnpm run auth-seed` - Create admin user accounts
-- `pnpm run fresh` - Reset database (remove all data)
+- `pnpm run seed` - Drop all collections and rebuild the database with auth and sample data
 - `pnpm run migrate-purchases` - Run purchase data migration
 
 ### Frontend Scripts
