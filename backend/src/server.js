@@ -1,6 +1,4 @@
-import dotenv from "dotenv";
-
-dotenv.config({ quiet: true });
+import "./config/env.js";
 
 import express from "express";
 import cors from "cors";

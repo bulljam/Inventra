@@ -2,7 +2,9 @@ import Product from '../models/Product.js';
 import ProductHistory from '../models/ProductHistory.js';
 import Purchase from '../models/Purchase.js';
 import Sale from '../models/Sale.js';
-import { getCloudinary } from '../config/cloudinary.js';
+import { buildUploadUrl, deleteLocalFile } from '../config/upload.js';
+
+const DEFAULT_IMAGE_URL = 'https://images.unsplash.com/photo-1586880244386-8b3e34c8382c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80';
 
 const calculateProductStock = async (productId) => {
   const purchases = await Purchase.aggregate([
@@ -113,9 +115,9 @@ export const createProduct = async (req, res) => {
 
     const images = [];
     if (req.files && req.files.length > 0) {
-      req.files.forEach((file, index) => {
+      req.files.forEach((file) => {
         images.push({
-          url: file.path,
+          url: buildUploadUrl(req, file.filename),
           publicId: file.filename
         });
       });
@@ -125,7 +127,7 @@ export const createProduct = async (req, res) => {
       name,
       category,
       sku: sku.toUpperCase(),
-      imageUrl: images.length > 0 ? images[0].url : 'https://images.unsplash.com/photo-1586880244386-8b3e34c8382c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80',
+      imageUrl: images.length > 0 ? images[0].url : DEFAULT_IMAGE_URL,
       images,
       description: description || 'No description provided'
     });
@@ -214,13 +216,12 @@ export const updateProduct = async (req, res) => {
       }
 
       if (Array.isArray(deletedImageIds) && deletedImageIds.length > 0) {
-        // Delete from Cloudinary
         for (const publicId of deletedImageIds) {
           try {
-            await getCloudinary().uploader.destroy(publicId);
-            console.log('Deleted image from Cloudinary:', publicId);
+            await deleteLocalFile(publicId);
+            console.log('Deleted local image:', publicId);
           } catch (error) {
-            console.error('Failed to delete image from Cloudinary:', error);
+            console.error('Failed to delete local image:', error);
           }
         }
         
@@ -238,9 +239,9 @@ export const updateProduct = async (req, res) => {
     // Handle new uploaded images (explicit addition)
     if (req.files && req.files.length > 0) {
       const newImages = [];
-      req.files.forEach((file, index) => {
+      req.files.forEach((file) => {
         newImages.push({
-          url: file.path,
+          url: buildUploadUrl(req, file.filename),
           publicId: file.filename
         });
       });
@@ -258,7 +259,7 @@ export const updateProduct = async (req, res) => {
       updates.images = currentImages;
       updates.imageUrl = currentImages.length > 0 
         ? currentImages[0].url 
-        : 'https://images.unsplash.com/photo-1586880244386-8b3e34c8382c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80';
+        : DEFAULT_IMAGE_URL;
       
     } else {
       // Don't include images or imageUrl in updates to preserve existing values
@@ -395,9 +396,9 @@ export const deleteProduct = async (req, res) => {
     if (product.images && product.images.length > 0) {
       for (const image of product.images) {
         try {
-          await getCloudinary().uploader.destroy(image.publicId);
+          await deleteLocalFile(image.publicId);
         } catch (error) {
-          console.error('Failed to delete image from Cloudinary:', error);
+          console.error('Failed to delete local image:', error);
         }
       }
     }

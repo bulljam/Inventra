@@ -13,7 +13,7 @@ A comprehensive full-stack inventory management application built with React and
 
 ### Advanced Features
 - **Analytics Dashboard**: Revenue tracking, sales trends, and performance metrics
-- **Image Management**: Product image upload and storage via Cloudinary
+- **Image Management**: Product image upload and storage via the local uploads folder
 - **User Authentication**: JWT-based authentication with role-based access control
 - **Responsive Design**: Mobile-first design that works across all devices
 - **Real-time Updates**: Dynamic dashboard with animated statistics
@@ -44,7 +44,7 @@ A comprehensive full-stack inventory management application built with React and
 - **Mongoose**: MongoDB object modeling for Node.js
 - **JWT**: JSON Web Tokens for authentication
 - **bcryptjs**: Password hashing and security
-- **Cloudinary**: Cloud-based image storage and management
+- **Multer**: Local file upload handling and storage
 - **Multer**: Middleware for handling file uploads
 - **Helmet**: Security middleware for Express
 - **CORS**: Cross-origin resource sharing configuration
@@ -85,7 +85,7 @@ inventory-management/
 - Node.js (v16 or higher)
 - npm or yarn
 - MongoDB Atlas account (or local MongoDB installation)
-- Cloudinary account for image storage
+- Local filesystem write access for uploaded images
 
 ### Environment Variables
 
@@ -99,9 +99,8 @@ MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRES_IN=7d
 CORS_ORIGIN=http://localhost:5173
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+MAX_FILE_SIZE=5242880
+UPLOAD_PATH=uploads/
 ```
 
 **Frontend (.env)**:
@@ -251,7 +250,7 @@ After running the seed scripts, use these credentials to login:
 - `POST /api/users/:id/reset-password` - Reset user password
 
 ### File Upload
-- `POST /api/uploads/file` - Upload files to Cloudinary
+- `POST /api/uploads/file` - Upload files to the local uploads folder
 
 ## Usage Guidelines
 
@@ -262,7 +261,7 @@ Authorization: Bearer <your_jwt_token>
 ```
 
 ### Image Upload
-Product images are uploaded to Cloudinary and automatically optimized. Supported formats: JPEG, PNG, WebP. Maximum file size: 5MB.
+Product images are uploaded to the local `uploads/` folder and served from the backend. Supported formats: JPEG, PNG, WebP. Maximum file size: 5MB.
 
 ### Role-Based Access
 - **Admin**: Can manage products, suppliers, purchases, and sales
@@ -313,7 +312,7 @@ Product images are uploaded to Cloudinary and automatically optimized. Supported
 
 ### Common Issues
 - **Database Connection**: Verify MongoDB URI and network access
-- **Image Upload**: Check Cloudinary credentials and file size limits
+- **Image Upload**: Check the uploads folder path, write permissions, and file size limits
 - **CORS Errors**: Ensure CORS_ORIGIN matches frontend URL
 - **Authentication**: Verify JWT_SECRET is set and tokens are not expired
 

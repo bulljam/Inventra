@@ -14,7 +14,7 @@ import {
   validateDeleteProduct,
   validateGetById 
 } from '../middleware/validation.js';
-import { createUpload } from '../config/cloudinary.js';
+import { createUpload } from '../config/upload.js';
 
 const router = express.Router();
 

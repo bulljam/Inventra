@@ -1,9 +1,7 @@
-import dotenv from 'dotenv';
+import '../config/env.js';
 import mongoose from 'mongoose';
 import readline from 'readline';
 import connectDatabase from '../config/database.js';
-
-dotenv.config();
 
 let rl = null;
 

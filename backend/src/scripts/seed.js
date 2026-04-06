@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import '../config/env.js';
 import connectDatabase from '../config/database.js';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
@@ -6,9 +6,6 @@ import Product from '../models/Product.js';
 import Supplier from '../models/Supplier.js';
 import Purchase from '../models/Purchase.js';
 import Sale from '../models/Sale.js';
-
-
-dotenv.config();
 
 const getDateFromToday = (daysOffset = 0) => {
   const today = new Date();
