@@ -1,6 +1,6 @@
-# Inventory Management System
+# Inventra
 
-A full-stack inventory app for managing products, suppliers, purchases, sales, and high-level business analytics.
+Inventra is an inventory app for managing products, suppliers, purchases, sales, and business performance in one place.
 
 ## Preview
 
