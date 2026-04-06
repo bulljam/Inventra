@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+.cache/
+.next/
+out/
+coverage/
+.nyc_output/
+
+# Runtime data and uploads
+uploads/
+pids/
+*.pid
+*.pid.lock
+*.seed
+.codex
+
+# Package manager and tool caches
+.npm/
+.pnpm-store/
+.yarn/
+.parcel-cache/
+.eslintcache
+*.tsbuildinfo
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Operating system files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+Icon?
+
+# Archives and temp files
+*.tgz
+*.tmp
+*.temp
+*.~*

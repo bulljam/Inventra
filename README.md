@@ -120,7 +120,7 @@ VITE_NODE_ENV=development
 2. **Install backend dependencies**:
    ```bash
    cd backend
-   npm install
+   pnpm install
    ```
 
 3. **Install frontend dependencies**:
@@ -136,7 +136,7 @@ VITE_NODE_ENV=development
 1. **Start the backend server**:
    ```bash
    cd backend
-   npm run dev
+   pnpm run dev
    ```
    Server will run on http://localhost:3001
 
@@ -158,7 +158,7 @@ VITE_NODE_ENV=development
 2. **Start the backend in production**:
    ```bash
    cd backend
-   npm start
+   pnpm start
    ```
 
 ## Database Setup & Seeding
@@ -168,17 +168,17 @@ VITE_NODE_ENV=development
 1. **Create admin users**:
    ```bash
    cd backend
-   npm run auth-seed
+   pnpm run auth-seed
    ```
 
 2. **Seed the database with sample data**:
    ```bash
-   npm run seed
+   pnpm run seed
    ```
 
 3. **Fresh database reset** (removes all data):
    ```bash
-   npm run fresh
+   pnpm run fresh
    ```
 
 ### Default Login Credentials
@@ -190,12 +190,12 @@ After running the seed scripts, use these credentials to login:
 ## Available Scripts
 
 ### Backend Scripts
-- `npm start` - Start production server
-- `npm run dev` - Start development server with nodemon
-- `npm run seed` - Populate database with sample data
-- `npm run auth-seed` - Create admin user accounts
-- `npm run fresh` - Reset database (remove all data)
-- `npm run migrate-purchases` - Run purchase data migration
+- `pnpm start` - Start production server
+- `pnpm run dev` - Start development server with nodemon
+- `pnpm run seed` - Populate database with sample data
+- `pnpm run auth-seed` - Create admin user accounts
+- `pnpm run fresh` - Reset database (remove all data)
+- `pnpm run migrate-purchases` - Run purchase data migration
 
 ### Frontend Scripts
 - `npm run dev` - Start Vite development server
