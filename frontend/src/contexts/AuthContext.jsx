@@ -52,7 +52,6 @@ export const AuthProvider = ({ children }) => {
     setUser(null)
     localStorage.removeItem('authToken')
     localStorage.removeItem('authUser')
-    sessionStorage.setItem('justLoggedOut', 'true')
   }
 
   const changePassword = async (currentPassword, newPassword) => {
