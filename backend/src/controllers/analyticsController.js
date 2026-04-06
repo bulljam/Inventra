@@ -13,7 +13,6 @@ export const getRevenue = async (req, res) => {
     const allPurchases = await Purchase.find();
     
 
-    // Calculate monetary amounts
     const totalSalesAmount = allSales.reduce((sum, sale) => {
       const saleAmount = sale.totalAmount || (sale.salePrice * sale.quantity);
       return sum + saleAmount;
@@ -24,7 +23,6 @@ export const getRevenue = async (req, res) => {
       return sum + purchaseAmount;
     }, 0);
 
-    // Keep existing calculations for backward compatibility
     const totalRevenue = totalSalesAmount - totalPurchasesAmount;
     const totalSales = allSales.length;
     const totalPurchases = allPurchases.length;
@@ -33,7 +31,6 @@ export const getRevenue = async (req, res) => {
       const saleDate = new Date(sale.saleDate);
       return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
     }).length;
-
 
     res.json({
       totalRevenue,
@@ -186,26 +183,21 @@ export const getAdvancedMetrics = async (req, res) => {
     const purchases = await Purchase.find();
     const sales = await Sale.find();
     
-    // Calculate total sales amount
     const totalSalesAmount = sales.reduce((sum, sale) => {
       const saleAmount = sale.totalAmount || (sale.salePrice * sale.quantity);
       return sum + saleAmount;
     }, 0);
 
-    // Calculate total purchase amount
     const totalPurchasesAmount = purchases.reduce((sum, purchase) => {
       const purchaseAmount = purchase.totalAmount || (purchase.unitPrice * purchase.quantity);
       return sum + purchaseAmount;
     }, 0);
 
-    // Calculate profit: Total Sales Amount - Total Purchases Amount
     const profit = totalSalesAmount - totalPurchasesAmount;
     
-    // Calculate Cost of Goods Sold (COGS) - total purchase amount for sold items
     const totalPurchaseCost = purchases.reduce((sum, purchase) => 
       sum + (purchase.totalAmount || (purchase.unitPrice * purchase.quantity)), 0);
     
-    // Calculate average inventory value
     let totalInventoryValue = 0;
     products.forEach(product => {
       const productPurchases = purchases.filter(p => 
@@ -219,21 +211,17 @@ export const getAdvancedMetrics = async (req, res) => {
       }
     });
 
-    // Inventory Turnover = COGS / Average Inventory Value
-    // Since we don't have historical inventory data, we'll use current inventory value
     const inventoryTurnover = totalInventoryValue > 0 ? totalPurchaseCost / totalInventoryValue : 0;
-
 
     res.json({
       profit,
       totalSalesAmount,
       totalPurchasesAmount,
-      inventoryTurnover: Math.round(inventoryTurnover * 10) / 10, // Round to 1 decimal
+      inventoryTurnover: Math.round(inventoryTurnover * 10) / 10,
       totalInventoryValue,
       totalPurchaseCost,
-      // Note: Stock Accuracy and Order Fill Rate cannot be calculated without additional data
-      stockAccuracy: null, // Requires physical count vs system count data
-      orderFillRate: null  // Requires order fulfillment tracking data
+      stockAccuracy: null,
+      orderFillRate: null
     });
   } catch (error) {
     console.error('Analytics: Error calculating advanced metrics:', error);

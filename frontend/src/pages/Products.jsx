@@ -25,7 +25,6 @@ import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
 import { productsApi } from '../services/apiClient'
 
-
 const ProductDetailModal = ({ isOpen, onClose, product, onEditProduct, onViewHistory }) => {
   if (!isOpen || !product) return null
 
@@ -261,9 +260,9 @@ const ProductHistoryModal = ({ isOpen, onClose, product }) => {
 }
 
 const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
-  const [currentImage, setCurrentImage] = useState(null) // Current image to display
-  const [newImageFile, setNewImageFile] = useState(null) // New file selected
-  const [removeCurrentImage, setRemoveCurrentImage] = useState(false) // Flag to remove existing image
+  const [currentImage, setCurrentImage] = useState(null)
+  const [newImageFile, setNewImageFile] = useState(null)
+  const [removeCurrentImage, setRemoveCurrentImage] = useState(false)
 
   useEffect(() => {
     if (!isOpen) {
@@ -271,15 +270,13 @@ const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
       setNewImageFile(null)
       setRemoveCurrentImage(false)
     } else {
-      // Set current image for edit mode - check both images array and imageUrl
       if (mode === 'edit') {
         if (product?.images && product.images.length > 0) {
-          setCurrentImage(product.images[0]) // Take the first image from images array
+          setCurrentImage(product.images[0])
         } else if (product?.imageUrl && product.imageUrl !== 'https://images.unsplash.com/photo-1586880244386-8b3e34c8382c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80') {
-          // Product has a real imageUrl (not the fallback)
           setCurrentImage({ url: product.imageUrl, publicId: null })
         } else {
-          setCurrentImage(null) // No existing image
+          setCurrentImage(null)
         }
       } else {
         setCurrentImage(null)
@@ -295,7 +292,6 @@ const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
     const file = event.target.files[0]
     if (file) {
       setNewImageFile(file)
-      // Create preview URL for the new image
       const previewUrl = URL.createObjectURL(file)
       setCurrentImage({ url: previewUrl, isNew: true })
     }
@@ -303,11 +299,9 @@ const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
 
   const handleRemoveImage = () => {
     if (currentImage?.isNew) {
-      // Remove new image
       setNewImageFile(null)
       setCurrentImage(mode === 'edit' && product?.images?.length > 0 ? product.images[0] : null)
     } else {
-      // Mark existing image for removal
       setRemoveCurrentImage(true)
       setCurrentImage(null)
     }
@@ -318,13 +312,11 @@ const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
     
     const formData = new FormData()
     
-    // Always include basic product data
     formData.append('name', e.target.name.value)
     formData.append('category', e.target.category.value)
     formData.append('sku', e.target.sku.value)
     formData.append('description', e.target.description.value || '')
     
-    // Determine if product has existing image (either in images array or imageUrl that's not fallback)
     const hasExistingImage = (product?.images?.length > 0) || 
       (product?.imageUrl && product.imageUrl !== 'https://images.unsplash.com/photo-1586880244386-8b3e34c8382c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80')
     
@@ -447,13 +439,11 @@ const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
           </div>
 
           <div className="space-y-6">
-            {/* Image Upload Section */}
             <div className="space-y-4">
               <label className="block text-sm font-medium text-gray-700">
                 Product Image
               </label>
               
-              {/* Image Preview */}
               <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 {currentImage ? (
                   <div className="relative inline-block flex-shrink-0">
@@ -467,7 +457,6 @@ const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
                         }}
                       />
                     </div>
-                    {/* Remove button */}
                     <button
                       type="button"
                       onClick={handleRemoveImage}
@@ -476,7 +465,6 @@ const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
                     >
                       <XMarkIcon className="h-3 w-3 sm:h-4 sm:w-4" />
                     </button>
-                    {/* Badge to show if it's current or new */}
                     <div className="absolute bottom-1 left-1 bg-black/75 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">
                       {currentImage.isNew ? 'New' : 'Current'}
                     </div>
@@ -487,7 +475,6 @@ const ProductModal = ({ isOpen, onClose, product, mode, onProductSaved }) => {
                   </div>
                 )}
                 
-                {/* Upload button and info */}
                 <div className="flex flex-col justify-center space-y-2">
                   <input
                     type="file"
@@ -573,7 +560,6 @@ export default function Products() {
     }
   }, [token])
 
-  // Get unique categories for filter dropdown
   const categories = [...new Set(products.map(product => product.category))].sort()
 
   const filteredProducts = products.filter(product => {
@@ -591,7 +577,6 @@ export default function Products() {
     return matchesSearch && matchesCategory && matchesStock
   })
 
-  // Table view pagination (3 rows per page)
   const totalTablePages = Math.ceil(filteredProducts.length / tableProductsPerPage)
   const tableStartIndex = (currentTablePage - 1) * tableProductsPerPage
   const tableEndIndex = tableStartIndex + tableProductsPerPage
@@ -712,7 +697,6 @@ export default function Products() {
 
       <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-white/30">
         <div className="p-6 border-b border-white/20">
-          {/* Search and Filters */}
           <div className="space-y-4">
             <div className="relative">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
@@ -725,7 +709,6 @@ export default function Products() {
               />
             </div>
             
-            {/* Filter Row */}
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2">
                 <label className="text-xs font-medium text-slate-600 whitespace-nowrap">Category:</label>
@@ -771,7 +754,6 @@ export default function Products() {
           </div>
         </div>
 
-        {/* Table View - Shows above 900px */}
         <div className="hidden min-[900px]:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50">
@@ -891,7 +873,6 @@ export default function Products() {
             </tbody>
           </table>
           
-          {/* Pagination Controls - Only shows above 900px */}
           {!loading && totalTablePages > 1 && (
             <div className="px-4 py-3 border-t border-slate-200 flex items-center justify-between">
               <div className="text-xs sm:text-sm text-slate-500">
@@ -920,7 +901,6 @@ export default function Products() {
           )}
         </div>
         
-        {/* Carousel View - Shows at 900px and below */}
         <div className="max-[900px]:block min-[901px]:hidden px-3 sm:px-4 lg:px-6 py-6">
           {loading ? (
             <div className="grid grid-cols-1 min-[694px]:grid-cols-2 gap-4">

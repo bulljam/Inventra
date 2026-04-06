@@ -19,6 +19,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 export default function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const location = useLocation();
   const { user, logout, isSuperAdmin } = useAuth();
 
@@ -39,11 +40,21 @@ export default function Layout() {
   ];
 
   const handleLogout = () => {
-    logout();
+    setIsLogoutModalOpen(true);
   };
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
+  };
+
+  const confirmLogout = () => {
+    setIsLogoutModalOpen(false);
+    setIsMobileMenuOpen(false);
+    logout();
   };
 
   return (
@@ -213,7 +224,7 @@ export default function Layout() {
 
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors"
+                className="w-full cursor-pointer flex items-center px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors"
               >
                 <ArrowRightOnRectangleIcon className="mr-2 sm:mr-3 h-3 w-3 sm:h-4 sm:w-4" />
                 Logout
@@ -318,7 +329,7 @@ export default function Layout() {
 
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors"
+                      className="w-full cursor-pointer flex items-center px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors"
                     >
                       <ArrowRightOnRectangleIcon className="mr-3 h-4 w-4" />
                       Logout
@@ -338,6 +349,56 @@ export default function Layout() {
           </main>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isLogoutModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/30 backdrop-blur-sm p-4"
+            onClick={closeLogoutModal}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ type: "spring", damping: 24, stiffness: 280 }}
+              className="w-full max-w-md rounded-3xl border border-white/30 bg-white/95 p-6 shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="mb-5 flex items-start gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+                  <ArrowRightOnRectangleIcon className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900">Log out?</h2>
+                  <p className="mt-1 text-sm text-slate-600">
+                    You will need to sign in again to access your dashboard.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={closeLogoutModal}
+                  className="flex-1 cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmLogout}
+                  className="flex-1 cursor-pointer rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-4 py-3 text-sm font-medium text-white transition-all hover:from-red-600 hover:to-rose-700"
+                >
+                  Logout
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { EyeIcon, EyeSlashIcon, EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
@@ -17,11 +17,9 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [focusedField, setFocusedField] = useState('')
   const { login, isAuthenticated } = useAuth()
-  const location = useLocation()
-  const from = location.state?.from?.pathname || '/'
 
   if (isAuthenticated()) {
-    return <Navigate to={from} replace />
+    return <Navigate to="/" replace />
   }
 
   const validateForm = () => {
@@ -78,7 +76,7 @@ const LoginPage = () => {
       const result = await login(formData.email, formData.password)
 
       if (result.success) {
-        toast.success('Welcome back! Redirecting...', { id: loadingToast, duration: 1500 })
+        toast.success('Welcome back!', { id: loadingToast, duration: 1500 })
       } else {
         setServerError(result.error)
         toast.error(result.error, { id: loadingToast })
@@ -107,16 +105,16 @@ const LoginPage = () => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, type: "spring", damping: 25 }}
-        className="relative z-10"
+        className="relative z-10 w-full max-w-xl"
       >
-        <div className="max-w-md w-full">
+        <div className="w-full">
           <motion.div
-            className="bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl p-8 border border-white/20"
+            className="bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl p-8 sm:p-10 border border-white/20"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <div className="text-center mb-8">
+            <div className="text-center mb-10">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -135,7 +133,7 @@ const LoginPage = () => {
               </motion.p>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-7">
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -156,7 +154,7 @@ const LoginPage = () => {
                     type="email"
                     autoComplete="email"
                     required
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                    className={`block w-full pl-11 pr-4 py-3.5 border rounded-xl text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
                       errors.email ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50 hover:bg-white focus:bg-white'
                     }`}
                     placeholder="Enter your email"
@@ -200,7 +198,7 @@ const LoginPage = () => {
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
                     required
-                    className={`block w-full pl-10 pr-10 py-3 border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                    className={`block w-full pl-11 pr-11 py-3.5 border rounded-xl text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
                       errors.password ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50 hover:bg-white focus:bg-white'
                     }`}
                     placeholder="Enter your password"
@@ -256,7 +254,7 @@ const LoginPage = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-600 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="group relative w-full flex justify-center py-3.5 px-5 border border-transparent text-base font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-600 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   {isLoading ? (
                     <motion.div
@@ -270,17 +268,6 @@ const LoginPage = () => {
                 </button>
               </motion.div>
             </form>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.0, duration: 0.5 }}
-              className="mt-6 text-center"
-            >
-              <p className="text-xs text-gray-500">
-                Demo accounts: admin@example.com or superadmin@example.com
-              </p>
-            </motion.div>
           </motion.div>
         </div>
       </motion.div>

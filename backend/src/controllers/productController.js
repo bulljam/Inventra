@@ -54,10 +54,7 @@ export const getAllProducts = async (req, res) => {
     const productsWithCalculatedData = await Promise.all(
       products.map(async (product) => {
         const productObj = product.toJSON();
-        // Use the actual stock value from the database (updated by purchase/sale controllers)
-        // productObj.stock is already set from the database
         
-        // Only update price if it's null/undefined
         if (!productObj.price) {
           productObj.price = await getLatestPurchasePrice(product._id) || 0;
         }
@@ -112,7 +109,6 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: 'SKU already exists' });
     }
 
-
     const images = [];
     if (req.files && req.files.length > 0) {
       req.files.forEach((file) => {
@@ -149,7 +145,6 @@ export const createProduct = async (req, res) => {
     const responseData = product.toJSON();
     responseData.stock = 0;
     responseData.price = 0;
-
 
     res.json({
       success: true,
@@ -199,9 +194,8 @@ export const updateProduct = async (req, res) => {
 
     let historyEvents = [];
     let currentImages = [...(product.images || [])];
-    let imageFieldChanged = false; // Track if image field was explicitly changed
+    let imageFieldChanged = false; 
 
-    // Handle deleted images (explicit removal)
     if (updates.deletedImages) {
       console.log('Processing deleted images:', updates.deletedImages);
       let deletedImageIds = [];
@@ -225,7 +219,6 @@ export const updateProduct = async (req, res) => {
           }
         }
         
-        // Remove from current images array
         currentImages = currentImages.filter(img => !deletedImageIds.includes(img.publicId));
         imageFieldChanged = true;
         historyEvents.push({
@@ -236,7 +229,6 @@ export const updateProduct = async (req, res) => {
       delete updates.deletedImages;
     }
 
-    // Handle new uploaded images (explicit addition)
     if (req.files && req.files.length > 0) {
       const newImages = [];
       req.files.forEach((file) => {
@@ -254,7 +246,6 @@ export const updateProduct = async (req, res) => {
       });
     }
 
-    // Three-state logic: only update images if explicitly changed
     if (imageFieldChanged) {
       updates.images = currentImages;
       updates.imageUrl = currentImages.length > 0 
@@ -262,9 +253,7 @@ export const updateProduct = async (req, res) => {
         : DEFAULT_IMAGE_URL;
       
     } else {
-      // Don't include images or imageUrl in updates to preserve existing values
     }
-
 
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
@@ -327,7 +316,6 @@ export const updateProduct = async (req, res) => {
     if (!responseData.price) {
       responseData.price = await getLatestPurchasePrice(updatedProduct._id) || 0;
     }
-
 
     res.json({
       success: true,

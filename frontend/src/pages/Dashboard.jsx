@@ -70,8 +70,6 @@ export default function Dashboard() {
     totalRevenue: null
   } : stats;
 
-
-
   return (
     <div className="relative w-full max-w-full overflow-x-hidden">
       <div className="mb-6 sm:mb-8">

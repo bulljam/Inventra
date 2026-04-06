@@ -111,7 +111,6 @@ const SuperAdminPanel = () => {
     
   }
 
-
   const handleCreateSubmit = async (e) => {
     e.preventDefault()
     
@@ -223,7 +222,6 @@ const SuperAdminPanel = () => {
                 </button>
               </nav>
             </div>
-
 
             {activeTab === 'create' && (
               <motion.div

@@ -32,9 +32,8 @@ const ChangePasswordPage = () => {
         setCountdown(prev => prev - 1)
       }, 1000)
     } else if (showSuccessModal && countdown === 0) {
-      // Auto-close the success modal after countdown
       setShowSuccessModal(false)
-      setCountdown(3) // Reset countdown for next time
+      setCountdown(3)
     }
     return () => clearInterval(interval)
   }, [showSuccessModal, countdown])

@@ -17,19 +17,17 @@ const getDateFromToday = (daysOffset = 0) => {
 
 const dropAllCollections = async () => {
   const db = mongoose.connection.db;
+  const dbName = db.databaseName;
   const collections = await db.listCollections().toArray();
 
   if (collections.length === 0) {
-    console.log('No existing collections found. Starting from an empty database.');
+    console.log(`Database "${dbName}" is already empty.`);
     return;
   }
 
-  console.log(`Dropping ${collections.length} existing collection(s)...`);
-
-  for (const collection of collections) {
-    await db.collection(collection.name).drop();
-    console.log(`Dropped collection: ${collection.name}`);
-  }
+  console.log(`Dropping database "${dbName}" with ${collections.length} collection(s)...`);
+  await db.dropDatabase();
+  console.log(`Dropped database "${dbName}" successfully.`);
 };
 
 const seedData = async () => {
@@ -213,9 +211,12 @@ const seedData = async () => {
         purchaseDate: getDateFromToday(5),
         createdBy: 'admin@example.com'
       }
-    ];
+    ].map((purchase) => ({
+      ...purchase,
+      totalAmount: purchase.quantity * purchase.unitPrice
+    }));
 
-    await Purchase.insertMany(purchases);
+    const createdPurchases = await Purchase.insertMany(purchases);
     console.log('Purchases seeded');
 
     const sales = [
@@ -289,17 +290,20 @@ const seedData = async () => {
         saleDate: getDateFromToday(7),
         createdBy: 'admin@example.com'
       }
-    ];
+    ].map((sale) => ({
+      ...sale,
+      totalAmount: sale.quantity * sale.salePrice
+    }));
 
-    await Sale.insertMany(sales);
+    const createdSales = await Sale.insertMany(sales);
     console.log('Sales seeded');
 
-    const totalPurchasesAmount = purchases.reduce(
-      (sum, purchase) => sum + (purchase.quantity * purchase.unitPrice),
+    const totalPurchasesAmount = createdPurchases.reduce(
+      (sum, purchase) => sum + purchase.totalAmount,
       0
     );
-    const totalSalesAmount = sales.reduce(
-      (sum, sale) => sum + (sale.quantity * sale.salePrice),
+    const totalSalesAmount = createdSales.reduce(
+      (sum, sale) => sum + sale.totalAmount,
       0
     );
     const totalRevenue = totalSalesAmount - totalPurchasesAmount;

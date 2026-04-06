@@ -56,13 +56,11 @@ export default function Analytics() {
   if (loading) {
     return (
       <div className="w-full max-w-full overflow-x-hidden min-w-0">
-        {/* Header Skeleton */}
         <div className="mb-8">
           <div className="animate-pulse h-8 bg-slate-200 rounded w-48 mb-2"></div>
           <div className="animate-pulse h-4 bg-slate-200 rounded w-80"></div>
         </div>
 
-        {/* Charts Grid Skeleton */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <SkeletonChart height="400px" />
           <SkeletonChart height="400px" />
@@ -226,7 +224,6 @@ export default function Analytics() {
       >
         <h3 className="text-lg font-semibold text-slate-900 mb-4">Top Performing Products</h3>
         
-        {/* Desktop Table View */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -266,7 +263,6 @@ export default function Analytics() {
           </table>
         </div>
         
-        {/* Mobile Card View */}
         <div className="sm:hidden space-y-3">
           {topProducts.map((product, index) => (
             <motion.div
