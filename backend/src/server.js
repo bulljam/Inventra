@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const configuredOrigins = (
   process.env.CORS_ORIGIN || "http://localhost:5173"
 )
@@ -146,7 +146,7 @@ app.listen(PORT, () => {
     console.log(`Environment: ${process.env.NODE_ENV}`);
     console.log(`API URL: http://localhost:${PORT}/api`);
     console.log(`Health check: http://localhost:${PORT}/api/health`);
-  }else{
+  } else {
     console.log("For logs, you need to provide NODE_ENV in .env");
   }
 });
