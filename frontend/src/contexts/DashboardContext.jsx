@@ -1,16 +1,7 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from './AuthContext'
 import { productsApi, suppliersApi, analyticsApi } from '../services/apiClient'
-
-const DashboardContext = createContext()
-
-export const useDashboard = () => {
-  const context = useContext(DashboardContext)
-  if (!context) {
-    throw new Error('useDashboard must be used within a DashboardProvider')
-  }
-  return context
-}
+import { DashboardContext } from './dashboard-context'
 
 export const DashboardProvider = ({ children }) => {
   const [stats, setStats] = useState({

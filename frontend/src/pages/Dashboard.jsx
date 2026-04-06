@@ -21,7 +21,7 @@ import {
 } from "recharts";
 import StatCard from "../components/StatCard";
 import { SkeletonChart } from "../components/Skeleton";
-import { useDashboard } from "../contexts/DashboardContext";
+import { useDashboard } from "../contexts/dashboard-context";
 import { analyticsApi } from "../services/apiClient";
 import { useAuth } from "../contexts/AuthContext";
 import toast from "react-hot-toast";
