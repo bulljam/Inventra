@@ -25,7 +25,7 @@ import {
 } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
-import { useDashboard } from '../contexts/DashboardContext'
+import { useDashboard } from '../contexts/dashboard-context'
 import { purchasesApi, productsApi, suppliersApi } from '../services/apiClient'
 import { SkeletonPurchasesTable, SkeletonCarousel } from '../components/Skeleton'
 
