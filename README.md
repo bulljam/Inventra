@@ -2,16 +2,13 @@
 
 Inventra is an inventory app for managing products, suppliers, purchases, sales, and business performance in one place.
 
-## Preview
+## Project Demo
 
-### Dashboard
-![Dashboard](frontend/src/assets/home.png)
+<p>Click the preview below to watch the demo. Use Ctrl + Click or open in a new tab if needed.</p>
 
-### Products
-![Products](frontend/src/assets/products.png)
-
-### Analytics
-![Analytics](frontend/src/assets/analytics.png)
+<a href="https://youtu.be/q88LoSENJeo">
+  <img src="https://img.youtube.com/vi/q88LoSENJeo/maxresdefault.jpg" alt="Project Demo" width="100%" />
+</a>
 
 ## Highlights
 
