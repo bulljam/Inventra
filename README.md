@@ -1,6 +1,6 @@
 # Inventra
 
-Inventra is an inventory app for managing products, suppliers, purchases, sales, and business performance in one place.
+Inventra is an inventory management app for tracking products, suppliers, purchases, sales, stock levels, and business performance in one place.
 
 ## Project Demo
 
